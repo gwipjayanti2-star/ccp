@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CCP System - Auto Sync</title>
     
-    <!-- PWA Meta Tags -->
+    <!-- PWA Meta Tags & Icons (Wajib untuk Android/iOS) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CCP Apps">
     <meta name="theme-color" content="#881337">
     
-    <!-- Tautan ke Manifest PWA (Untuk deployment sungguhan) -->
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+    
+    <!-- Tautan ke Manifest PWA yang sudah dipisahkan -->
     <link rel="manifest" href="manifest.json">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -410,7 +413,6 @@
                 showMessage('Berhasil', 'Stok berhasil diperbarui dan disinkronkan ke Spreadsheet.', 'success');
             };
 
-            // Fungsi Share Semua Stok
             const handleShareAllStockWA = () => {
                 const dateStr = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 let text = `*LAPORAN STOK BARANG CCP*\n`;
@@ -439,7 +441,6 @@
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Stok Barang</h2>
                         
-                        {/* Tombol Share WA Semua Stok */}
                         <button onClick={handleShareAllStockWA} className="bg-[#25D366] text-white py-2.5 px-4 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-95 transition flex items-center gap-2">
                             <Icons.WhatsApp />
                             <span className="hidden sm:inline font-bold text-sm">Share Stok</span>
@@ -767,7 +768,6 @@
 
             const toggleExpand = (id) => { if (expandedId === id) setExpandedId(null); else setExpandedId(id); };
 
-            // Fungsi Share WA Per Laporan/Shift
             const handleShareWA = (h) => {
                 const dateFormated = new Date(h.date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 
@@ -804,10 +804,9 @@
                 window.open(url, '_blank');
             };
 
-            // Hitung tanggal awal dan akhir minggu ini
             const { start: weekStart, end: weekEnd } = useMemo(() => {
                 const now = new Date();
-                const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; // 0 = Senin
+                const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; 
                 const start = new Date(now);
                 start.setDate(now.getDate() - dayOfWeek);
                 start.setHours(0, 0, 0, 0);
@@ -817,7 +816,6 @@
                 return { start, end };
             }, []);
 
-            // Filter history berdasarkan minggu ini
             const filteredHandovers = useMemo(() => {
                 return handovers.filter(h => {
                     const hDate = new Date(h.date).getTime();
@@ -877,7 +875,6 @@
                                                         </div>
                                                     )}
 
-                                                    {/* Tombol Share WA - Dikeluarkan dari Accordion agar selalu tampil */}
                                                     <div className="mt-4 flex">
                                                         <button 
                                                             onClick={(e) => { e.stopPropagation(); handleShareWA(h); }} 
@@ -1142,81 +1139,15 @@
     </script>
     
     <script>
-        // Pendaftaran Service Worker diletakkan di akhir
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js').then(reg => {
                     console.log('Service Worker terdaftar di Scope:', reg.scope);
                 }).catch(err => {
-                    console.warn('Gagal daftar Service Worker (Mungkin karena belum dibuat filenya):', err);
+                    console.warn('Gagal mendaftar Service Worker (Pastikan file sw.js sudah dibuat):', err);
                 });
             });
         }
     </script>
-
-<!--
-    ========================================================
-    PENTING UNTUK PWA (INSTALL DI ANDROID / AUTO UPDATE)
-    ========================================================
-    Sesuai standar web, file PWA harus diletakkan TERPISAH agar berfungsi sempurna 
-    saat mendownload update di latar belakang.
-    
-    Tolong buat 2 file baru di satu folder yang sama dengan index.html ini.
-
-    1. FILE PERTAMA: manifest.json
-    (Copy paste isi di bawah ini ke dalam file bernama manifest.json)
-    --------------------------------------------------------
-    {
-        "name": "Sistem CCP Auto Sync",
-        "short_name": "CCP Apps",
-        "start_url": ".",
-        "display": "standalone",
-        "background_color": "#f8fafc",
-        "theme_color": "#881337",
-        "icons": [
-            {
-                "src": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-                "sizes": "512x512",
-                "type": "image/png",
-                "purpose": "any maskable"
-            }
-        ]
-    }
-    --------------------------------------------------------
-
-    2. FILE KEDUA: sw.js
-    (File ini akan memaksa HP untuk mengecek update terbaru index.html / Cache Busting.
-    Copy paste isi di bawah ini ke dalam file bernama sw.js)
-    --------------------------------------------------------
-    const CACHE_NAME = 'ccp-cache-v1';
-    
-    self.addEventListener('install', (event) => {
-        // Memaksa SW baru segera aktif
-        self.skipWaiting(); 
-    });
-
-    self.addEventListener('activate', (event) => {
-        event.waitUntil(self.clients.claim());
-    });
-
-    self.addEventListener('fetch', (event) => {
-        // Network-First Strategy: Selalu ambil versi terbaru dari server jika online.
-        // Jika offline/gagal, baru load dari Cache. Menjamin Auto-Update.
-        event.respondWith(
-            fetch(event.request, { cache: 'no-store' }) // Paksa jangan pakai cache browser biasa
-            .then(networkResponse => {
-                const responseClone = networkResponse.clone();
-                caches.open(CACHE_NAME).then(cache => {
-                    cache.put(event.request, responseClone);
-                });
-                return networkResponse;
-            })
-            .catch(() => {
-                return caches.match(event.request);
-            })
-        );
-    });
-    --------------------------------------------------------
--->
 </body>
 </html>
