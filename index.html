@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CCP System - Auto Sync</title>
     
-    <!-- PWA Meta Tags & Icons (Wajib untuk Android/iOS) -->
+    <!-- PWA Meta Tags & Icons -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CCP Apps">
     <meta name="theme-color" content="#881337">
     
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
-    
-    <!-- Tautan ke Manifest PWA yang sudah dipisahkan -->
     <link rel="manifest" href="manifest.json">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -934,7 +932,8 @@
                         <button onClick={() => setView('history')} className="bg-white border-2 border-slate-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-50 transition">Lihat Histori</button>
                     </div>
                     
-                    <div className="bg-white p-5 rounded-3xl shadow-sm border border-slate-200/50 mb-6 sticky top-[72px] z-30">
+                    {/* PERUBAHAN: Menghapus 'sticky top-[72px] z-30' agar panel filter bisa ikut ter-scroll ke atas dan tidak menutupi aktivitas */}
+                    <div className="bg-white p-5 rounded-3xl shadow-sm border border-slate-200/50 mb-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                             <div>
                                 <label className="block text-[10px] font-bold text-slate-500 mb-1.5">Tanggal</label>
@@ -1050,9 +1049,11 @@
                 } catch (err) { console.error("Auto-sync bg error:", err); }
             }, [inventory, transactions, orders, handovers, user]);
 
-            const handleDirectSync = async () => {
+            // PERUBAHAN: Menambahkan parameter `silent` agar saat auto-sync tidak memunculkan popup yang mengganggu
+            const handleDirectSync = async (silent = false) => {
                 if (!SCRIPT_URL || SCRIPT_URL.includes("ISI_URL") || SCRIPT_URL.trim() === "") {
-                    return showMessage('Mode Offline', 'URL Apps Script belum terkonfigurasi.', 'info');
+                    if (!silent) showMessage('Mode Offline', 'URL Apps Script belum terkonfigurasi.', 'info');
+                    return;
                 }
                 setIsSyncing(true);
                 try {
@@ -1063,13 +1064,25 @@
                         if (result.data.transactions) setTransactions(result.data.transactions);
                         if (result.data.orders) setOrders(result.data.orders);
                         if (result.data.handovers) setHandovers(result.data.handovers);
-                        showMessage('Berhasil', 'Data disinkronkan dengan Google Spreadsheet.', 'success');
+                        if (!silent) showMessage('Berhasil', 'Data disinkronkan dengan Google Spreadsheet.', 'success');
                     } else throw new Error(result.message || "Data kosong/format tidak sesuai.");
-                } catch (err) { showMessage('Gagal', err.message || 'Periksa koneksi internet Anda.', 'error'); } 
+                } catch (err) { 
+                    if (!silent) showMessage('Gagal', err.message || 'Periksa koneksi internet Anda.', 'error'); 
+                    console.error("Sync error:", err);
+                } 
                 finally { setIsSyncing(false); }
             };
 
-            const handleLogin = (role, username) => setUser({ role, username });
+            // PERUBAHAN: Memicu sinkronisasi di latar belakang sesaat setelah login
+            const handleLogin = (role, username) => {
+                setUser({ role, username });
+                
+                // Beri jeda sebentar agar transisi halaman terjadi dulu, lalu auto-sync diam-diam (silent = true)
+                setTimeout(() => {
+                    handleDirectSync(true);
+                }, 500);
+            };
+
             const handleLogout = () => { setUser(null); setActiveTab('dashboard'); };
 
             if (!user) return <Login onLogin={handleLogin} showMessage={showMessage} />;
@@ -1098,7 +1111,7 @@
                         </div>
                         <div className="flex items-center gap-2">
                             <button 
-                                onClick={handleDirectSync} disabled={isSyncing}
+                                onClick={() => handleDirectSync(false)} disabled={isSyncing}
                                 className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 rounded-full text-slate-700 hover:bg-slate-200 shadow-sm transition font-bold text-xs disabled:opacity-50 cursor-pointer"
                             >
                                 <span className={isSyncing ? "animate-spin-custom" : ""}><Icons.Refresh /></span>
