@@ -1,23 +1,23 @@
 {
-    "name": "Sistem CCP Auto Sync",
-    "short_name": "CCP Apps",
-    "start_url": ".",
-    "display": "standalone",
-    "background_color": "#f8fafc",
-    "theme_color": "#881337",
-    "orientation": "portrait",
-    "icons": [
-        {
-            "src": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
-        }
-    ]
+"name": "Sistem CCP Auto Sync",
+"short_name": "CCP Apps",
+"start_url": "./",
+"display": "standalone",
+"background_color": "#f8fafc",
+"theme_color": "#881337",
+"orientation": "portrait",
+"icons": [
+{
+"src": "https://www.image2url.com/r2/default/files/1791451087195-28a68f51-9394-4470-beff-fc375a80db49.png",
+"sizes": "192x192",
+"type": "image/png",
+"purpose": "any maskable"
+},
+{
+"src": "https://www.image2url.com/r2/default/files/1791451087195-28a68f51-9394-4470-beff-fc375a80db49.png",
+"sizes": "512x512",
+"type": "image/png",
+"purpose": "any maskable"
+}
+]
 }
