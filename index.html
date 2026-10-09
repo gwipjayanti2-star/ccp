@@ -75,113 +75,7 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo, useRef, useCallback } = React;
 
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzZFwGRhDnUrwLBhUOThzvLj09KUkdkmPVnqi3p2L1biu_wVfLJ6IJHhOY-ovrwUFyhAA/exec";
-
-        const MASTER_DATA = [
-            { id: 1, code: '7701910041', name: 'Mesh 40 Diameter 1,5 m – Gulungan', min: 0, unit: 'm' },
-            { id: 2, code: '7701910332', name: 'Mesh 40 Diameter 95 cm – Bracket', min: 5, unit: 'pcs' },
-            { id: 3, code: '7701820198', name: 'Mesh 40 Diameter 45 cm – Bracket', min: 5, unit: 'pcs' },
-            { id: 4, code: '7701910207', name: 'Mesh 24', min: 10, unit: 'm' },
-            { id: 5, code: '7701820087', name: 'Mesh 20 Bracket Diameter 45 cm', min: 5, unit: 'pcs' },
-            { id: 6, code: '7701820025', name: 'Mesh 20 Bracket Diameter 95 cm', min: 5, unit: 'pcs' },
-            { id: 7, code: '7701910386', name: 'Mesh 20 Bracket 1,5 m', min: 4, unit: 'pcs' },
-            { id: 8, code: '7701910281', name: 'Mesh 20 Gulungan 95 cm', min: 10, unit: 'm' },
-            { id: 9, code: '7701910026', name: 'Mesh 16 Gulungan 95 cm', min: 10, unit: 'm' },
-            { id: 10, code: '7701910329', name: 'Mesh 16 Bracket 95 cm', min: 7, unit: 'pcs' },
-            { id: 11, code: '7701910185', name: 'Mesh 16 Gulungan 1,5 m', min: 15, unit: 'm' },
-            { id: 12, code: '7701820026', name: 'Mesh 16 Bracket Diameter 45 cm', min: 5, unit: 'pcs' },
-            { id: 13, code: '7701910385', name: 'Mesh 16 Bracket Diameter 1,5 m', min: 7, unit: 'pcs' },
-            { id: 14, code: '7701910020', name: 'Mesh 12', min: 0, unit: 'm' },
-            { id: 15, code: '7701820037', name: 'Mesh 12 Bracket Diameter 95 cm', min: 0, unit: 'pcs' },
-            { id: 16, code: '7701910378', name: 'Mesh 10', min: 7, unit: 'm' },
-            { id: 17, code: '7701910228', name: 'Mesh 3', min: 5, unit: 'm' },
-            { id: 18, code: '7101431089', name: 'Karet Seal Vibro 1500', min: 4, unit: 'pcs' },
-            { id: 19, code: '7700210039', name: 'Karet Seal Vibro 1000', min: 4, unit: 'pcs' },
-            { id: 20, code: '7600215237', name: 'Magnet Trap BallMill', min: 3, unit: 'pcs' },
-            { id: 21, code: '7600210858', name: 'Magnet Trap Crusher (Panjang)', min: 0, unit: 'pcs' },
-            { id: 22, code: '7701910046', name: 'Mesh 80', min: 5, unit: 'm' },
-            { id: 23, code: '7701910109', name: 'Mesh 60 Gulungan', min: 5, unit: 'm' },
-            { id: 24, code: '7701910035', name: 'Mesh 30 Gulungan 100 cm', min: 10, unit: 'm' },
-            { id: 25, code: '7500410519', name: 'Gunting Seng', min: 0, unit: 'pcs' },
-            { id: 26, code: '7500410310', name: 'Tang Potong', min: 0, unit: 'pcs' },
-            { id: 27, code: '7701721580', name: 'Plat Hole Crusher 5 mm, 1220 × 2440 mm', min: 1, unit: 'pcs' },
-            { id: 28, code: '7701721262', name: 'Plat Hole Crusher 3 mm, 1220 × 2440 mm', min: 1, unit: 'pcs' },
-            { id: 29, code: '7700313827', name: 'Baut M16 Vibro 1500', min: 4, unit: 'pcs' },
-            { id: 30, code: '7101437328', name: 'Silicon Seal / Vibro UFO GY-600 Type A', min: 4, unit: 'pcs' },
-            { id: 31, code: '7100713393', name: 'Flexible Hose Output Vibro Ø153mm', min: 4, unit: 'pcs' },
-            { id: 32, code: '-', name: 'Wiremesh Silo', min: 10, unit: 'pcs' },
-            { id: 33, code: '7100713396', name: 'Flexible Hose Input Vibro 300 m', min: 4, unit: 'pcs' }
-        ];
-
-        const MASTER_ACTIVITIES = [
-            { stage: "Stage 1", area: "DUMPING", name: "Vibro terigu 1 & 2", lines: ["ALL"] },
-            { stage: "Stage 1", area: "DUMPING", name: "Vibro Tapioka & Gula", lines: ["ALL"] },
-            { stage: "Stage 1", area: "FORMULASI", name: "Suhu formulasi 1", lines: ["ALL"] },
-            { stage: "Stage 1", area: "FORMULASI", name: "Suhu formulasi 2", lines: ["ALL"] },
-            { stage: "Stage 1", area: "FORMULASI", name: "Suhu ruang abonn", lines: ["ABON"] },
-            { stage: "Stage 1", area: "FORMULASI", name: "Suhu fifo 1", lines: ["LINE 2", "LINE 4"] },
-            { stage: "Stage 1", area: "FORMULASI", name: "Suhu fifo 2", lines: ["LINE 2", "LINE 4"] },
-            { stage: "Stage 1", area: "FORMULASI", name: "Suhu fifo 4", lines: ["LINE 2", "LINE 4"] },
-            { stage: "Stage 1", area: "FORMULASI", name: "Mesh 16 finest brand", lines: ["LINE 1"] },
-            { stage: "Stage 1", area: "FORMULASI", name: "Mesh 16 Tepung kelapa", lines: ["LINE 1", "LINE 3"] },
-            { stage: "Stage 1", area: "FORMULASI", name: "Mesh 20 garam", lines: ["LINE 1", "LINE 2", "LINE 4"] },
-            { stage: "Stage 1", area: "FORMULASI", name: "Mesh 16 soda", lines: ["LINE 1", "LINE 2", "LINE 4"] },
-            { stage: "Stage 1", area: "CAIRAN ROSA DAN COCONUT", name: "Mesh 20 soda, amoniak, bubuk", lines: ["LINE 3", "LINE 5"] },
-            { stage: "Stage 1", area: "CREAM", name: "Mesh 3 Cream SGC", lines: ["LINE 1"] },
-            { stage: "Stage 1", area: "CREAM", name: "Mesh 40 gula giling", lines: ["LINE 1", "LINE 5"] },
-            { stage: "Stage 1", area: "CREAM", name: "Mesh 16 whey powder", lines: ["LINE 1", "LINE 5"] },
-            { stage: "Stage 1", area: "CREAM", name: "Suhu ruang cream", lines: ["LINE 1", "LINE 5"] },
-            { stage: "Stage 1", area: "CENTRAL KITCHEN", name: "Suhu fermentasi", lines: ["LINE 2", "LINE 4"] },
-            { stage: "Stage 1", area: "CENTRAL KITCHEN", name: "Suhu pendingin batching", lines: ["LINE 2", "LINE 4"] },
-            { stage: "Stage 1", area: "CENTRAL KITCHEN", name: "Mesh 16 Coating Cokelat", lines: ["LINE 1"] },
-            { stage: "Stage 1", area: "CENTRAL KITCHEN", name: "Mesh 24 Cairan Rosa", lines: ["LINE 5"] },
-            { stage: "Stage 1", area: "CENTRAL KITCHEN", name: "Mesh 16 Bubuk", lines: ["ALL"] },
-            { stage: "Stage 1", area: "CENTRAL KITCHEN", name: "Mesh 16 Ragi", lines: ["LINE 2", "LINE 4"] },
-            { stage: "Stage 1", area: "CENTRAL KITCHEN", name: "Mesh 80 larutan air garam", lines: ["LINE 2", "LINE 4"] },
-            { stage: "Stage 1", area: "MOULDING & OVEN", name: "MD Line 1", lines: ["LINE 1"] },
-            { stage: "Stage 1", area: "MOULDING & OVEN", name: "MD Line 2", lines: ["LINE 2"] },
-            { stage: "Stage 1", area: "MOULDING & OVEN", name: "MD Line 3", lines: ["LINE 3"] },
-            { stage: "Stage 1", area: "MOULDING & OVEN", name: "MD Line 4", lines: ["LINE 4"] },
-            { stage: "Stage 1", area: "MOULDING & OVEN", name: "MD Line 5", lines: ["LINE 5"] },
-            { stage: "Stage 1", area: "MOULDING & OVEN", name: "Mesh 16 Line 1 telur", lines: ["LINE 1"] },
-            { stage: "Stage 1", area: "MOULDING & OVEN", name: "Mesh 16 Line 2", lines: ["LINE 2"] },
-            { stage: "Stage 1", area: "MOULDING & OVEN", name: "Mesh 10 Line 4", lines: ["LINE 4"] },
-            { stage: "Stage 1", area: "MOULDING & OVEN", name: "Mesh 10 Line 5", lines: ["LINE 5"] },
-            { stage: "Stage 2", area: "CENTRAL KITCHEN", name: "Suhu Fermentasi Double choco", lines: ["LINE MDC"] },
-            { stage: "Stage 2", area: "CENTRAL KITCHEN", name: "Suhu Fermentasi Malju", lines: ["LINE 2"] },
-            { stage: "Stage 2", area: "CENTRAL KITCHEN", name: "Suhu fermentasi Choki", lines: ["LINE 3"] },
-            { stage: "Stage 2", area: "CENTRAL KITCHEN", name: "Suhu fifo 3", lines: ["LINE 2", "LINE 3", "LINE 5"] },
-            { stage: "Stage 2", area: "CENTRAL KITCHEN", name: "Mesh bubur Coating malju 30", lines: ["LINE 5"] },
-            { stage: "Stage 2", area: "CENTRAL KITCHEN", name: "Mesh bubur Coating Double choco 30", lines: ["LINE MDC"] },
-            { stage: "Stage 2", area: "CENTRAL KITCHEN", name: "Mesh modified 16", lines: ["LINE 2", "LINE 3", "LINE 5"] },
-            { stage: "Stage 2", area: "CENTRAL KITCHEN", name: "Mesh ragi 16", lines: ["LINE 2", "LINE 3", "LINE 5"] },
-            { stage: "Stage 2", area: "CENTRAL KITCHEN", name: "Mesh bubuk kulit 16", lines: ["ALL"] },
-            { stage: "Stage 2", area: "DUMPING", name: "Mesh tapioka 40", lines: ["LINE 2", "LINE 3", "LINE 5"] },
-            { stage: "Stage 2", area: "CAIRAN COCONUT", name: "Mesh soda dan amoniak 20", lines: ["LINE 4"] },
-            { stage: "Stage 2", area: "CAIRAN COCONUT", name: "Mesh bubuk 20mm", lines: ["LINE 4"] },
-            { stage: "Stage 2", area: "CAIRAN COCONUT", name: "Plat hole 2.5 mm", lines: ["LINE 4"] },
-            { stage: "Stage 2", area: "FORMULASI", name: "Suhu fifo 1", lines: ["LINE 2", "LINE 3", "LINE 5"] },
-            { stage: "Stage 2", area: "FORMULASI", name: "Suhu fifo 2", lines: ["LINE 2", "LINE 3", "LINE 5"] },
-            { stage: "Stage 2", area: "FORMULASI", name: "Suhu ruang non alergen", lines: ["ALL"] },
-            { stage: "Stage 2", area: "FORMULASI", name: "Suhu ruang alergen", lines: ["ALL"] },
-            { stage: "Stage 2", area: "FORMULASI", name: "Mesh Whey 40", lines: ["LINE 3", "LINE 4", "LINE 5"] },
-            { stage: "Stage 2", area: "FORMULASI", name: "Mesh gula 16", lines: ["LINE 5"] },
-            { stage: "Stage 2", area: "FORMULASI", name: "Mesh gula 20", lines: ["LINE 2"] },
-            { stage: "Stage 2", area: "BALLMIL", name: "Mesh whey 16", lines: ["LINE 3", "LINE 4", "LINE 5"] },
-            { stage: "Stage 2", area: "BALLMIL", name: "Mesh Coating Double choco 24", lines: ["LINE MDC"] },
-            { stage: "Stage 2", area: "BALLMIL", name: "Mesh Coating keju 40", lines: ["LINE 2", "LINE 5"] },
-            { stage: "Stage 2", area: "BALLMIL", name: "Mesh 16 liquor", lines: ["ALL"] },
-            { stage: "Stage 2", area: "BALLMIL", name: "Magnet trap", lines: ["LINE 2", "LINE 3", "LINE 5"] },
-            { stage: "Stage 2", area: "MOLDING & OVEN", name: "MD Line 1", lines: ["LINE 1"] },
-            { stage: "Stage 2", area: "MOLDING & OVEN", name: "MD Line 2", lines: ["LINE 2"] },
-            { stage: "Stage 2", area: "MOLDING & OVEN", name: "MD Line 3", lines: ["LINE 3"] },
-            { stage: "Stage 2", area: "MOLDING & OVEN", name: "MD Line 4", lines: ["LINE 4"] },
-            { stage: "Stage 2", area: "MOLDING & OVEN", name: "MD Line 5", lines: ["LINE 5"] },
-            { stage: "Stage 2", area: "MOLDING & OVEN", name: "Mesh spray oil line 2 40", lines: ["LINE 2"] },
-            { stage: "Stage 2", area: "MOLDING & OVEN", name: "Mesh spray oil line 4 40", lines: ["LINE 4"] },
-            { stage: "Stage 2", area: "MOLDING & OVEN", name: "Plat Hole gula Saur malju", lines: ["LINE 2", "LINE 5"] },
-            { stage: "Stage 2", area: "MOLDING & OVEN", name: "Mesh 40 bracket Egg Liquid", lines: ["LINE 1"] }
-        ];
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxkhN_Wny2yvarYD_cA5Ya0phmYFVqTZ1VRVwTKMAPIIPLc2X77_2GRIOqkv1PZRfEBlQ/exec";
 
         const LINE_OPTIONS = {
             "Stage 1": ["LINE 1", "LINE 2", "LINE 3", "LINE 4", "LINE 5", "ABON"],
@@ -190,7 +84,7 @@
 
         const Icons = {
             Logo: () => (
-                <svg viewBox="0 0 100 100" className="w-10 h-10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 100 100" className="w-9 h-9 md:w-10 md:h-10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="100" height="100" rx="24" fill="url(#paint0_linear)" />
                     <path d="M42 35C38 35 34 38 34 42V58C34 62 38 65 42 65H46M58 35C54 35 50 38 50 42V58C50 62 54 65 58 65H62M76 35H72C68 35 64 38 64 42V58C64 62 68 65 72 65H76V50H72" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/>
                     <defs>
@@ -202,21 +96,21 @@
                     </defs>
                 </svg>
             ),
-            Home: () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a2 2 0 002 2h3m10-11l2 2m-2-2v10a2 2 0 01-2 2h-3m-6 0a2 2 0 002-2v-4a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 002 2m-6 0h6"/></svg>,
-            Box: () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16zM3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>,
-            Clipboard: () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>,
-            Handshake: () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>,
-            Refresh: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>,
+            Home: () => <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a2 2 0 002 2h3m10-11l2 2m-2-2v10a2 2 0 01-2 2h-3m-6 0a2 2 0 002-2v-4a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 002 2m-6 0h6"/></svg>,
+            Box: () => <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16zM3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>,
+            Clipboard: () => <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>,
+            Handshake: () => <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>,
+            Refresh: () => <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>,
             Alert: () => <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>,
             Search: () => <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>,
             Plus: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/></svg>,
             CheckCircle: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
             Info: () => <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
             Close: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>,
-            Logout: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>,
+            Logout: () => <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>,
             ChevronDown: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>,
             ChevronUp: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"/></svg>,
-            WhatsApp: () => <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp: () => <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         };
 
         function useLocalStorage(key, initialValue) {
@@ -246,10 +140,10 @@
                             <div className={`p-2 rounded-full ${message.type === 'error' ? 'bg-rose-100 text-rose-500' : 'bg-blue-100 text-blue-500'}`}>
                                 {message.type === 'error' ? <Icons.Alert /> : <Icons.Info />}
                             </div>
-                            <h3 className="text-lg font-bold text-slate-800">{message.title}</h3>
+                            <h3 className="text-base md:text-lg font-bold text-slate-800">{message.title}</h3>
                         </div>
-                        <p className="text-slate-600 mb-6 leading-relaxed font-medium">{message.text}</p>
-                        <button onClick={onClose} className="w-full py-3.5 bg-maroon-shine text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all active:scale-95">
+                        <p className="text-sm md:text-base text-slate-600 mb-6 leading-relaxed font-medium">{message.text}</p>
+                        <button onClick={onClose} className="w-full py-3 bg-maroon-shine text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all active:scale-95 text-sm md:text-base">
                             Mengerti
                         </button>
                     </div>
@@ -291,21 +185,21 @@
 
             return (
                 <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 fade-in relative z-[100]">
-                    <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md border border-slate-100">
-                        <div className="flex justify-center mb-6"><Icons.Logo /></div>
-                        <h2 className="text-2xl font-extrabold text-center text-slate-800 mb-6 tracking-tight">Login Sistem CCP</h2>
+                    <div className="bg-white p-6 md:p-8 rounded-3xl shadow-xl w-full max-w-md border border-slate-100">
+                        <div className="flex justify-center mb-5 md:mb-6"><Icons.Logo /></div>
+                        <h2 className="text-xl md:text-2xl font-extrabold text-center text-slate-800 mb-6 tracking-tight">Login Sistem CCP</h2>
                         
                         <form onSubmit={handleLogin} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-1">Username</label>
-                                <input type="text" required value={username} onChange={e => setUsername(e.target.value)} className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-maroon-500/50 bg-slate-50 font-medium" />
+                                <label className="block text-xs md:text-sm font-bold text-slate-700 mb-1">Username</label>
+                                <input type="text" required value={username} onChange={e => setUsername(e.target.value)} className="w-full p-2.5 md:p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-maroon-500/50 bg-slate-50 font-medium text-sm md:text-base" />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-1">Password</label>
-                                <input type="password" required value={password} onChange={e => setPassword(e.target.value)} className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-maroon-500/50 bg-slate-50 font-medium" />
+                                <label className="block text-xs md:text-sm font-bold text-slate-700 mb-1">Password</label>
+                                <input type="password" required value={password} onChange={e => setPassword(e.target.value)} className="w-full p-2.5 md:p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-maroon-500/50 bg-slate-50 font-medium text-sm md:text-base" />
                             </div>
                             <div className="pt-2">
-                                <button type="submit" disabled={loading} className="w-full py-3.5 bg-maroon-shine text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all active:scale-95 disabled:opacity-50 cursor-pointer">
+                                <button type="submit" disabled={loading} className="w-full py-3 bg-maroon-shine text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all active:scale-95 disabled:opacity-50 cursor-pointer text-sm md:text-base">
                                     {loading ? 'Memproses...' : 'Login'}
                                 </button>
                             </div>
@@ -315,57 +209,59 @@
             );
         };
 
-        const Dashboard = ({ inventory, transactions }) => {
+        const Dashboard = ({ inventory, transactions, masterData }) => {
             const lowStockItems = useMemo(() => {
+                if (!masterData || masterData.length === 0) return [];
                 return inventory.filter(item => {
-                    const master = MASTER_DATA.find(m => m.id === item.id);
+                    const master = masterData.find(m => m.id === item.id);
                     return master && master.min > 0 && item.stock <= (master.min + 2);
                 }).map(item => ({
                     ...item,
-                    ...MASTER_DATA.find(m => m.id === item.id)
+                    ...masterData.find(m => m.id === item.id)
                 }));
-            }, [inventory]);
+            }, [inventory, masterData]);
 
             return (
                 <div className="fade-in pb-24">
-                    <div className="mb-8">
-                        <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Dashboard</h2>
-                        <p className="text-slate-500 mt-1 font-medium">Ringkasan kondisi stok & peringatan</p>
+                    <div className="mb-6 md:mb-8">
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Dashboard</h2>
+                        <p className="text-sm md:text-base text-slate-500 mt-1 font-medium">Ringkasan kondisi stok & peringatan</p>
                     </div>
                     
-                    <div className="bg-white rounded-3xl shadow-sm border border-slate-200/50 p-6 mb-8 relative overflow-hidden">
+                    <div className="bg-white rounded-3xl shadow-sm border border-slate-200/50 p-5 md:p-6 mb-8 relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-2 h-full bg-maroon-500"></div>
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="bg-rose-100 p-2.5 rounded-full relative">
+                        <div className="flex items-center gap-3 mb-5 md:mb-6">
+                            <div className="bg-rose-100 p-2 md:p-2.5 rounded-full relative">
                                 <div className="absolute inset-0 bg-rose-400 rounded-full animate-ping opacity-30"></div>
                                 <Icons.Alert />
                             </div>
                             <div>
-                                <h3 className="font-extrabold text-lg text-slate-800 leading-tight">Peringatan Stok</h3>
-                                <p className="text-xs text-rose-600 font-bold mt-0.5 uppercase tracking-wide">Barang dengan stok menipis</p>
+                                <h3 className="font-extrabold text-base md:text-lg text-slate-800 leading-tight">Peringatan Stok</h3>
+                                <p className="text-[10px] md:text-xs text-rose-600 font-bold mt-0.5 uppercase tracking-wide">Barang dengan stok menipis</p>
                             </div>
                         </div>
                         {lowStockItems.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center p-8 bg-slate-50 rounded-2xl border border-slate-200 border-dashed">
-                                <div className="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4 shadow-sm">
+                            <div className="flex flex-col items-center justify-center p-6 md:p-8 bg-slate-50 rounded-2xl border border-slate-200 border-dashed">
+                                <div className="w-12 h-12 md:w-14 md:h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-3 md:mb-4 shadow-sm">
                                     <Icons.CheckCircle />
                                 </div>
-                                <p className="text-sm text-slate-600 font-bold">Semua stok barang dalam kondisi aman.</p>
+                                <p className="text-xs md:text-sm text-slate-600 font-bold text-center">Semua stok barang dalam kondisi aman atau Master Data belum termuat.</p>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                                 {lowStockItems.map(item => (
-                                    <div key={item.id} className="relative p-5 bg-gradient-to-br from-white to-rose-50/30 rounded-2xl border border-rose-100 shadow-sm transition-all duration-300 hover:shadow-md hover:border-rose-300 overflow-hidden group">
-                                        <div className="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-bl-full -z-10 group-hover:scale-110 transition-transform duration-500"></div>
-                                        <div className="flex justify-between items-start mb-4">
-                                            <div className="pr-4">
-                                                <p className="font-extrabold text-slate-800 text-[15px] mb-2 leading-tight">{item.name}</p>
-                                                <span className="text-[10px] font-mono font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md border border-slate-200 shadow-sm">{item.code}</span>
+                                    <div key={item.id} className="relative p-4 md:p-5 bg-gradient-to-br from-white to-rose-50/30 rounded-2xl border border-rose-100 shadow-sm transition-all duration-300 hover:shadow-md hover:border-rose-300 overflow-hidden group">
+                                        <div className="absolute top-0 right-0 w-20 h-20 md:w-24 md:h-24 bg-rose-50 rounded-bl-full -z-10 group-hover:scale-110 transition-transform duration-500"></div>
+                                        <div className="flex justify-between items-start mb-3 md:mb-4">
+                                            <div className="pr-3 md:pr-4">
+                                                <p className="font-extrabold text-slate-800 text-sm md:text-[15px] mb-1.5 md:mb-2 leading-tight">{item.name}</p>
+                                                <span className="text-[9px] md:text-[10px] font-mono font-bold bg-slate-100 text-slate-600 px-2 py-1 md:px-2.5 rounded-md border border-slate-200 shadow-sm">{item.code}</span>
                                             </div>
                                             <div className="text-right shrink-0">
-                                                <p className={`font-black text-2xl leading-none ${item.stock <= item.min ? 'text-rose-600' : 'text-orange-500'}`}>
-                                                    {item.stock} <span className="text-sm font-medium text-slate-500">{item.unit}</span>
+                                                <p className={`font-black text-xl md:text-2xl leading-none ${item.stock <= item.min ? 'text-rose-600' : 'text-orange-500'}`}>
+                                                    {item.stock} <span className="text-xs md:text-sm font-medium text-slate-500">{item.unit}</span>
                                                 </p>
+                                                <p className="text-[10px] md:text-xs text-slate-500 font-bold mt-1">Min: {item.min}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -377,13 +273,13 @@
             );
         };
 
-        const Inventory = ({ inventory, setInventory, addTransaction, showMessage, userRole, triggerAutoSync }) => {
+        const Inventory = ({ inventory, setInventory, addTransaction, showMessage, userRole, triggerAutoSync, masterData }) => {
             const [search, setSearch] = useState('');
             const [selectedItem, setSelectedItem] = useState(null);
             const [qty, setQty] = useState('');
             const [modalMode, setModalMode] = useState('');
 
-            const filteredData = MASTER_DATA.filter(item => 
+            const filteredData = (masterData || []).filter(item => 
                 item.name.toLowerCase().includes(search.toLowerCase()) || item.code.toLowerCase().includes(search.toLowerCase())
             );
 
@@ -413,19 +309,22 @@
             };
 
             const handleShareAllStockWA = () => {
+                if (!masterData || masterData.length === 0) return showMessage('Data Kosong', 'Master data belum tersedia, harap sinkronkan.', 'error');
+                
                 const dateStr = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 let text = `*LAPORAN STOK BARANG CCP*\n`;
                 text += `📅 *Tanggal:* ${dateStr}\n`;
                 text += `───────────────────\n\n`;
 
-                MASTER_DATA.forEach(item => {
+                masterData.forEach(item => {
                     const currentStock = inventory.find(i => i.id === item.id)?.stock || 0;
                     const isLow = item.min > 0 && currentStock <= item.min;
                     const alertIcon = isLow ? '⚠️' : '✅';
                     
                     text += `${alertIcon} *${item.name}*\n`;
                     text += `KODE: ${item.code}\n`;
-                    text += `STOK: *${currentStock} ${item.unit}*\n\n`;
+                    text += `STOK: *${currentStock} ${item.unit}*\n`;
+                    text += `MIN STOK: ${item.min}\n\n`;
                 });
 
                 text += `───────────────────\n`;
@@ -437,59 +336,67 @@
 
             return (
                 <div className="fade-in pb-24">
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Stok Barang</h2>
+                    <div className="flex justify-between items-center mb-5 md:mb-6">
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Stok Barang</h2>
                         
-                        <button onClick={handleShareAllStockWA} className="bg-[#25D366] text-white py-2.5 px-4 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-95 transition flex items-center gap-2">
+                        <button onClick={handleShareAllStockWA} className="bg-[#25D366] text-white py-2 px-3 md:py-2.5 md:px-4 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-95 transition flex items-center gap-1.5 md:gap-2">
                             <Icons.WhatsApp />
-                            <span className="hidden sm:inline font-bold text-sm">Share Stok</span>
+                            <span className="hidden sm:inline font-bold text-xs md:text-sm">Share Stok</span>
                         </button>
                     </div>
                     
-                    <div className="relative mb-6">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400"><Icons.Search /></div>
-                        <input type="text" placeholder="Cari nama atau kode barang..." className="w-full pl-12 pr-4 py-4 rounded-2xl shadow-sm border border-slate-200 focus:ring-2 focus:ring-maroon-500/50 bg-white font-semibold text-sm" value={search} onChange={(e) => setSearch(e.target.value)} />
+                    <div className="relative mb-5 md:mb-6">
+                        <div className="absolute inset-y-0 left-0 pl-3 md:pl-4 flex items-center pointer-events-none text-slate-400"><Icons.Search /></div>
+                        <input type="text" placeholder="Cari nama atau kode barang..." className="w-full pl-10 md:pl-12 pr-4 py-3 md:py-4 rounded-2xl shadow-sm border border-slate-200 focus:ring-2 focus:ring-maroon-500/50 bg-white font-semibold text-xs md:text-sm" value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
 
-                    <div className="space-y-4">
-                        {filteredData.map(item => {
-                            const currentStock = inventory.find(i => i.id === item.id)?.stock || 0;
-                            const isLow = item.min > 0 && currentStock <= item.min;
-                            
-                            return (
-                                <div key={item.id} className={`p-5 rounded-3xl shadow-sm border ${isLow ? 'bg-rose-50 border-rose-200' : 'bg-white border-slate-200'}`}>
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                        <div>
-                                            <span className="text-[10px] font-mono font-bold bg-slate-100 px-2 py-1 rounded-md mb-2 inline-block">{item.code}</span>
-                                            <p className="font-extrabold text-slate-800 text-lg">{item.name}</p>
-                                            <div className="mt-2">
-                                                <div className="inline-block px-3 py-1.5 bg-slate-50 rounded-lg border font-bold text-slate-700">
-                                                    Stok: <span className="text-lg">{currentStock}</span> <span className="text-xs">{item.unit}</span>
+                    <div className="space-y-3 md:space-y-4">
+                        {filteredData.length === 0 ? (
+                            <div className="text-center py-10 bg-white rounded-3xl border border-slate-200 border-dashed">
+                                <p className="text-slate-500 font-bold text-sm">Data Barang belum tersedia. Silakan ketuk tombol Sinkronkan.</p>
+                            </div>
+                        ) : (
+                            filteredData.map(item => {
+                                const currentStock = inventory.find(i => i.id === item.id)?.stock || 0;
+                                const isLow = item.min > 0 && currentStock <= item.min;
+                                
+                                return (
+                                    <div key={item.id} className={`p-4 md:p-5 rounded-3xl shadow-sm border ${isLow ? 'bg-rose-50 border-rose-200' : 'bg-white border-slate-200'}`}>
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
+                                            <div>
+                                                <span className="text-[9px] md:text-[10px] font-mono font-bold bg-slate-100 px-2 py-1 rounded-md mb-2 inline-block">{item.code}</span>
+                                                <p className="font-extrabold text-slate-800 text-base md:text-lg leading-tight">{item.name}</p>
+                                                <div className="mt-2">
+                                                    <div className="inline-block px-3 py-1.5 bg-slate-50 rounded-lg border font-bold text-slate-700">
+                                                        Stok: <span className="text-base md:text-lg text-maroon-700">{currentStock}</span> <span className="text-[10px] md:text-xs text-slate-500">{item.unit}</span>
+                                                        <span className="mx-2 text-slate-300">|</span>
+                                                        <span className="text-xs md:text-sm text-slate-500">Min: {item.min}</span>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            {userRole === 'operator' && (
+                                                <div className="flex gap-2">
+                                                    <button onClick={() => { setSelectedItem(item); setModalMode('add'); }} className="flex-1 md:flex-none bg-white border-2 border-emerald-500 text-emerald-600 py-2 px-3 md:px-4 rounded-xl font-bold text-xs md:text-sm">Masuk</button>
+                                                    <button onClick={() => { setSelectedItem(item); setModalMode('use'); }} className="flex-1 md:flex-none bg-maroon-shine text-white py-2 px-3 md:px-4 rounded-xl font-bold shadow-md text-xs md:text-sm">Keluar</button>
+                                                </div>
+                                            )}
                                         </div>
-                                        {userRole === 'operator' && (
-                                            <div className="flex gap-2">
-                                                <button onClick={() => { setSelectedItem(item); setModalMode('add'); }} className="flex-1 bg-white border-2 border-emerald-500 text-emerald-600 py-2 px-4 rounded-xl font-bold">Masuk</button>
-                                                <button onClick={() => { setSelectedItem(item); setModalMode('use'); }} className="flex-1 bg-maroon-shine text-white py-2 px-4 rounded-xl font-bold shadow-md">Keluar</button>
-                                            </div>
-                                        )}
                                     </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })
+                        )}
                     </div>
 
                     {selectedItem && (
                         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 fade-in">
-                            <div className="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl">
-                                <h3 className="text-xl font-extrabold mb-1">{modalMode === 'use' ? 'Pemakaian' : 'Tambah Stok'}</h3>
-                                <p className="text-sm text-slate-500 mb-6">{selectedItem.name}</p>
+                            <div className="bg-white rounded-3xl w-full max-w-sm p-5 md:p-6 shadow-2xl">
+                                <h3 className="text-lg md:text-xl font-extrabold mb-1">{modalMode === 'use' ? 'Pemakaian' : 'Tambah Stok'}</h3>
+                                <p className="text-xs md:text-sm text-slate-500 mb-5 md:mb-6">{selectedItem.name}</p>
                                 <form onSubmit={handleUpdateStock}>
-                                    <input type="number" step="0.01" required placeholder="Jumlah" className="w-full p-4 rounded-2xl border-2 border-slate-200 text-2xl font-black text-center mb-6" value={qty} onChange={(e) => setQty(e.target.value)} />
-                                    <div className="flex gap-3">
-                                        <button type="button" onClick={() => setSelectedItem(null)} className="flex-1 py-3 bg-slate-100 rounded-xl font-bold">Batal</button>
-                                        <button type="submit" className="flex-1 py-3 bg-maroon-shine text-white rounded-xl font-bold">Simpan</button>
+                                    <input type="number" step="0.01" required placeholder="Jumlah" className="w-full p-3 md:p-4 rounded-2xl border-2 border-slate-200 text-xl md:text-2xl font-black text-center mb-5 md:mb-6" value={qty} onChange={(e) => setQty(e.target.value)} />
+                                    <div className="flex gap-2 md:gap-3">
+                                        <button type="button" onClick={() => setSelectedItem(null)} className="flex-1 py-2.5 md:py-3 bg-slate-100 rounded-xl font-bold text-sm md:text-base">Batal</button>
+                                        <button type="submit" className="flex-1 py-2.5 md:py-3 bg-maroon-shine text-white rounded-xl font-bold text-sm md:text-base">Simpan</button>
                                     </div>
                                 </form>
                             </div>
@@ -499,7 +406,7 @@
             );
         };
 
-        const Orders = ({ orders, setOrders, showMessage, userRole, triggerAutoSync }) => {
+        const Orders = ({ orders, setOrders, showMessage, userRole, triggerAutoSync, masterData }) => {
             const [showNewOrder, setShowNewOrder] = useState(false);
             const [activeSubTab, setActiveSubTab] = useState('proses');
             const [searchTerm, setSearchTerm] = useState('');
@@ -516,7 +423,7 @@
                 return () => document.removeEventListener("mousedown", handleClickOutside);
             }, [dropdownRef]);
 
-            const filteredItems = MASTER_DATA.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()) || item.code.toLowerCase().includes(searchTerm.toLowerCase()));
+            const filteredItems = (masterData || []).filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()) || item.code.toLowerCase().includes(searchTerm.toLowerCase()));
 
             const handleNewOrder = (e) => {
                 e.preventDefault();
@@ -569,87 +476,87 @@
 
             return (
                 <div className="fade-in pb-24">
-                    <div className="flex justify-between items-center mb-6">
+                    <div className="flex justify-between items-center mb-5 md:mb-6">
                         <div>
-                            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Orderan</h2>
-                            <p className="text-slate-500 mt-1 font-medium">Pantau status pesanan barang</p>
+                            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Orderan</h2>
+                            <p className="text-sm md:text-base text-slate-500 mt-1 font-medium">Pantau status pesanan barang</p>
                         </div>
                         {userRole === 'operator' && (
-                            <button onClick={() => setShowNewOrder(!showNewOrder)} className="bg-maroon-shine text-white p-3.5 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition">
+                            <button onClick={() => setShowNewOrder(!showNewOrder)} className="bg-maroon-shine text-white p-3 md:p-3.5 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition">
                                 <Icons.Plus />
                             </button>
                         )}
                     </div>
 
-                    <div className="flex relative bg-slate-200/50 p-1.5 rounded-2xl mb-8 border border-slate-200/60 shadow-inner">
+                    <div className="flex relative bg-slate-200/50 p-1.5 rounded-2xl mb-6 md:mb-8 border border-slate-200/60 shadow-inner">
                         <div className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-xl shadow-sm border border-slate-100 transition-transform duration-300 ease-out z-0`} style={{ transform: activeSubTab === 'selesai' ? 'translateX(100%)' : 'translateX(0)' }}></div>
-                        <button onClick={() => setActiveSubTab('proses')} className={`relative z-10 flex-1 py-3 text-sm font-extrabold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${activeSubTab === 'proses' ? 'text-maroon-800' : 'text-slate-500 hover:text-slate-700'}`}>Dalam Proses <span className="px-2 py-0.5 rounded-md text-[10px] bg-rose-100 text-maroon-700">{activeOrders.length}</span></button>
-                        <button onClick={() => setActiveSubTab('selesai')} className={`relative z-10 flex-1 py-3 text-sm font-extrabold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${activeSubTab === 'selesai' ? 'text-emerald-700' : 'text-slate-500 hover:text-slate-700'}`}>Selesai <span className="px-2 py-0.5 rounded-md text-[10px] bg-emerald-100 text-emerald-700">{completedOrders.length}</span></button>
+                        <button onClick={() => setActiveSubTab('proses')} className={`relative z-10 flex-1 py-2.5 md:py-3 text-xs md:text-sm font-extrabold rounded-xl transition-colors duration-300 flex items-center justify-center gap-1.5 md:gap-2 ${activeSubTab === 'proses' ? 'text-maroon-800' : 'text-slate-500 hover:text-slate-700'}`}>Proses <span className="px-2 py-0.5 rounded-md text-[9px] md:text-[10px] bg-rose-100 text-maroon-700">{activeOrders.length}</span></button>
+                        <button onClick={() => setActiveSubTab('selesai')} className={`relative z-10 flex-1 py-2.5 md:py-3 text-xs md:text-sm font-extrabold rounded-xl transition-colors duration-300 flex items-center justify-center gap-1.5 md:gap-2 ${activeSubTab === 'selesai' ? 'text-emerald-700' : 'text-slate-500 hover:text-slate-700'}`}>Selesai <span className="px-2 py-0.5 rounded-md text-[9px] md:text-[10px] bg-emerald-100 text-emerald-700">{completedOrders.length}</span></button>
                     </div>
 
                     {showNewOrder && (
-                        <div className="bg-white p-6 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200 mb-8 slide-up relative z-40">
-                            <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
-                                <h3 className="font-extrabold text-xl text-slate-800">Buat Order Baru</h3>
+                        <div className="bg-white p-5 md:p-6 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200 mb-6 md:mb-8 slide-up relative z-40">
+                            <div className="flex justify-between items-center mb-5 border-b border-slate-100 pb-4">
+                                <h3 className="font-extrabold text-lg md:text-xl text-slate-800">Buat Order Baru</h3>
                                 <button onClick={() => setShowNewOrder(false)} className="text-slate-400 bg-slate-50 p-2 rounded-full"><Icons.Close /></button>
                             </div>
                             <form onSubmit={handleNewOrder}>
-                                <div className="mb-5" ref={dropdownRef}>
-                                    <label className="block text-sm font-bold text-slate-700 mb-2">Cari Barang</label>
+                                <div className="mb-4 md:mb-5" ref={dropdownRef}>
+                                    <label className="block text-xs md:text-sm font-bold text-slate-700 mb-1.5 md:mb-2">Cari Barang</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><Icons.Search /></div>
-                                        <input type="text" className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-maroon-500/50 bg-slate-50 font-medium text-sm" placeholder="Ketik nama / kode barang..." value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setIsDropdownOpen(true); setSelectedItemObj(null); }} onFocus={() => setIsDropdownOpen(true)} />
+                                        <input type="text" className="w-full pl-10 md:pl-11 pr-4 py-3 md:py-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-maroon-500/50 bg-slate-50 font-medium text-xs md:text-sm" placeholder="Ketik nama / kode barang..." value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setIsDropdownOpen(true); setSelectedItemObj(null); }} onFocus={() => setIsDropdownOpen(true)} />
                                         {isDropdownOpen && searchTerm && (
                                             <ul className="absolute z-50 w-full bg-white border border-slate-100 mt-2 rounded-xl shadow-2xl max-h-56 overflow-y-auto">
                                                 {filteredItems.map(item => (
                                                     <li key={item.id} onClick={() => { setSelectedItemObj(item); setSearchTerm(item.name); setIsDropdownOpen(false); }} className="p-3 hover:bg-rose-50 cursor-pointer border-b border-slate-50 flex flex-col">
-                                                        <span className="font-bold text-slate-800 text-sm">{item.name}</span><span className="text-[10px] font-mono text-slate-400 mt-0.5">{item.code}</span>
+                                                        <span className="font-bold text-slate-800 text-xs md:text-sm">{item.name}</span><span className="text-[9px] md:text-[10px] font-mono text-slate-400 mt-0.5">{item.code}</span>
                                                     </li>
                                                 ))}
                                             </ul>
                                         )}
                                     </div>
                                     {selectedItemObj && (
-                                        <div className="mt-3 p-4 bg-gradient-to-r from-rose-50 to-white rounded-xl border border-rose-100 flex justify-between items-center fade-in">
-                                            <div><p className="text-[10px] text-maroon-600 font-black uppercase tracking-widest mb-1">Terpilih</p><p className="text-sm font-bold text-slate-800">{selectedItemObj.name}</p></div>
+                                        <div className="mt-3 p-3 md:p-4 bg-gradient-to-r from-rose-50 to-white rounded-xl border border-rose-100 flex justify-between items-center fade-in">
+                                            <div><p className="text-[9px] md:text-[10px] text-maroon-600 font-black uppercase tracking-widest mb-1">Terpilih</p><p className="text-xs md:text-sm font-bold text-slate-800">{selectedItemObj.name}</p></div>
                                         </div>
                                     )}
                                 </div>
-                                <div className="mb-8">
-                                    <label className="block text-sm font-bold text-slate-700 mb-2">Catatan / Qty</label>
-                                    <input type="text" required value={orderNotes} onChange={(e) => setOrderNotes(e.target.value)} className="w-full p-3.5 rounded-xl border border-slate-200 bg-slate-50 font-medium text-sm" placeholder="Contoh: 10 Roll, Urgent" />
+                                <div className="mb-6 md:mb-8">
+                                    <label className="block text-xs md:text-sm font-bold text-slate-700 mb-1.5 md:mb-2">Catatan / Qty</label>
+                                    <input type="text" required value={orderNotes} onChange={(e) => setOrderNotes(e.target.value)} className="w-full p-3 md:p-3.5 rounded-xl border border-slate-200 bg-slate-50 font-medium text-xs md:text-sm" placeholder="Contoh: 10 Roll, Urgent" />
                                 </div>
-                                <button type="submit" className="w-full py-4 bg-maroon-shine text-white font-extrabold rounded-xl shadow-md active:scale-95 transition-all">Buat Orderan</button>
+                                <button type="submit" className="w-full py-3 md:py-4 bg-maroon-shine text-white font-extrabold rounded-xl shadow-md active:scale-95 transition-all text-sm md:text-base">Buat Orderan</button>
                             </form>
                         </div>
                     )}
 
-                    <div className="space-y-5">
+                    <div className="space-y-4 md:space-y-5">
                         {displayOrders.length === 0 ? (
-                            <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 border-dashed">
-                                <p className="text-slate-500 font-bold">Kosong.</p>
+                            <div className="text-center py-12 bg-white rounded-3xl border border-slate-200 border-dashed">
+                                <p className="text-slate-500 font-bold text-sm">Kosong.</p>
                             </div>
                         ) : (
                             displayOrders.map(order => (
-                                <div key={order.id} className={`bg-white p-6 rounded-3xl shadow-sm border ${order.completed ? 'border-emerald-200/60 bg-gradient-to-br from-white to-emerald-50/20' : 'border-slate-200/60'}`}>
-                                    <div className="flex justify-between items-start mb-4">
+                                <div key={order.id} className={`bg-white p-5 md:p-6 rounded-3xl shadow-sm border ${order.completed ? 'border-emerald-200/60 bg-gradient-to-br from-white to-emerald-50/20' : 'border-slate-200/60'}`}>
+                                    <div className="flex justify-between items-start mb-3 md:mb-4">
                                         <div>
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <span className="text-[10px] font-mono font-bold bg-slate-100 px-2.5 py-1 rounded-md text-slate-600">{order.itemCode}</span>
+                                            <div className="flex items-center gap-2 mb-1.5 md:mb-2">
+                                                <span className="text-[9px] md:text-[10px] font-mono font-bold bg-slate-100 px-2 py-1 md:px-2.5 rounded-md text-slate-600">{order.itemCode}</span>
                                             </div>
-                                            <h4 className="font-extrabold text-xl text-slate-800 leading-tight mb-1 pr-4">{order.itemName}</h4>
-                                            <p className="text-[11px] font-bold text-slate-400 mb-3 flex items-center gap-1">
-                                                <Icons.Refresh /> Dibuat: {new Date(order.date).toLocaleString('id-ID', {day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'})}
+                                            <h4 className="font-extrabold text-base md:text-xl text-slate-800 leading-tight mb-1 pr-2 md:pr-4">{order.itemName}</h4>
+                                            <p className="text-[10px] md:text-[11px] font-bold text-slate-400 mb-3 flex items-center gap-1">
+                                                <Icons.Refresh /> Dibuat: {new Date(order.date).toLocaleString('id-ID', {day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'})}
                                             </p>
-                                            <p className="text-sm text-slate-600 bg-slate-50/80 p-3 rounded-xl border border-slate-100 font-medium">Catatan: <span className="font-extrabold text-slate-800">{order.notes}</span></p>
+                                            <p className="text-xs md:text-sm text-slate-600 bg-slate-50/80 p-2.5 md:p-3 rounded-xl border border-slate-100 font-medium">Catatan: <span className="font-extrabold text-slate-800">{order.notes}</span></p>
                                         </div>
                                     </div>
                                     
                                     {!order.completed && (
-                                        <div className="mt-6 mb-2">
-                                            <div className="flex justify-between items-end mb-2">
-                                                <span className="text-[10px] font-bold text-slate-500 uppercase">Status Saat Ini</span>
-                                                <span className="text-xs font-black text-maroon-700 bg-rose-50 px-3 py-1 rounded-full">{STAGES[order.status]}</span>
+                                        <div className="mt-5 md:mt-6 mb-2">
+                                            <div className="flex justify-between items-end mb-1.5 md:mb-2">
+                                                <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase">Status Saat Ini</span>
+                                                <span className="text-[10px] md:text-xs font-black text-maroon-700 bg-rose-50 px-2 md:px-3 py-1 rounded-full">{STAGES[order.status]}</span>
                                             </div>
                                             <div className="flex gap-1.5 h-2">
                                                 {STAGES.map((step, index) => (
@@ -659,16 +566,16 @@
                                         </div>
                                     )}
 
-                                    <div className="mt-4 bg-slate-50/70 p-4 rounded-2xl border border-slate-100">
-                                        <h5 className="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-3">Detail Perubahan Status</h5>
-                                        <div className="space-y-2.5">
+                                    <div className="mt-4 bg-slate-50/70 p-3 md:p-4 rounded-2xl border border-slate-100">
+                                        <h5 className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-wider mb-2 md:mb-3">Detail Perubahan Status</h5>
+                                        <div className="space-y-2">
                                             {(order.statusHistory || [{status: order.status, date: order.date}]).map((h, idx) => (
                                                 <div key={idx} className="flex justify-between items-center">
                                                     <div className="flex items-center gap-2">
-                                                        <div className={`w-2 h-2 rounded-full ${idx === (order.statusHistory?.length - 1 || 0) && !order.completed ? 'bg-maroon-500 shadow-glow-sm' : 'bg-slate-300'}`}></div>
-                                                        <span className={`font-bold text-sm ${idx === (order.statusHistory?.length - 1 || 0) && !order.completed ? 'text-slate-800' : 'text-slate-500'}`}>{STAGES[h.status]}</span>
+                                                        <div className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${idx === (order.statusHistory?.length - 1 || 0) && !order.completed ? 'bg-maroon-500 shadow-glow-sm' : 'bg-slate-300'}`}></div>
+                                                        <span className={`font-bold text-xs md:text-sm ${idx === (order.statusHistory?.length - 1 || 0) && !order.completed ? 'text-slate-800' : 'text-slate-500'}`}>{STAGES[h.status]}</span>
                                                     </div>
-                                                    <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-1 rounded-md border border-slate-200/60 shadow-sm">
+                                                    <span className="text-[9px] md:text-[10px] font-bold text-slate-500 bg-white px-1.5 py-0.5 md:px-2 md:py-1 rounded-md border border-slate-200/60 shadow-sm">
                                                         {new Date(h.date).toLocaleString('id-ID', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'})}
                                                     </span>
                                                 </div>
@@ -677,11 +584,11 @@
                                     </div>
 
                                     {!order.completed && userRole === 'operator' && (
-                                        <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-slate-100">
+                                        <div className="mt-5 md:mt-6 flex flex-col sm:flex-row justify-end gap-2 md:gap-3 pt-4 border-t border-slate-100">
                                             {order.status < STAGES.length - 1 ? (
-                                                <button onClick={() => advanceStatus(order.id)} className="w-full sm:w-auto py-3 px-6 bg-white border-2 border-slate-200 text-slate-700 rounded-xl text-sm font-extrabold hover:border-maroon-500 hover:text-maroon-700 transition">Lanjut ke {STAGES[order.status + 1]}</button>
+                                                <button onClick={() => advanceStatus(order.id)} className="w-full sm:w-auto py-2.5 md:py-3 px-4 md:px-6 bg-white border-2 border-slate-200 text-slate-700 rounded-xl text-xs md:text-sm font-extrabold hover:border-maroon-500 hover:text-maroon-700 transition">Lanjut ke {STAGES[order.status + 1]}</button>
                                             ) : (
-                                                <button onClick={() => completeOrder(order.id)} className="w-full sm:w-auto py-3 px-6 bg-emerald-500 text-white rounded-xl text-sm font-extrabold hover:bg-emerald-600 transition">Selesaikan Pesanan</button>
+                                                <button onClick={() => completeOrder(order.id)} className="w-full sm:w-auto py-2.5 md:py-3 px-4 md:px-6 bg-emerald-500 text-white rounded-xl text-xs md:text-sm font-extrabold hover:bg-emerald-600 transition">Selesaikan Pesanan</button>
                                             )}
                                         </div>
                                     )}
@@ -693,7 +600,7 @@
             );
         };
 
-        const Handover = ({ handovers, setHandovers, showMessage, userRole, triggerAutoSync }) => {
+        const Handover = ({ handovers, setHandovers, showMessage, userRole, triggerAutoSync, masterActivities }) => {
             const [view, setView] = useState('history'); 
             const [dateStr, setDateStr] = useState(() => new Date().toISOString().split('T')[0]);
             const [shift, setShift] = useState('Shift 1');
@@ -703,11 +610,12 @@
             const [expandedId, setExpandedId] = useState(null);
 
             const activeActivities = useMemo(() => {
-                return MASTER_ACTIVITIES.filter(a => 
+                if (!masterActivities || masterActivities.length === 0) return [];
+                return masterActivities.filter(a => 
                     a.stage === stage && 
                     (a.lines.includes("ALL") || a.lines.some(l => selectedLines.includes(l)))
                 );
-            }, [stage, selectedLines]);
+            }, [stage, selectedLines, masterActivities]);
 
             const groupedActivities = useMemo(() => {
                 const groups = {};
@@ -826,22 +734,22 @@
                 return (
                     <div className="fade-in pb-24">
                         <div className="flex justify-between items-center mb-4">
-                            <div><h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Histori Laporan</h2></div>
+                            <div><h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Histori Laporan</h2></div>
                             {userRole === 'operator' && (
-                                <button onClick={() => setView('form')} className="bg-white border-2 border-slate-200 text-slate-600 p-2.5 rounded-2xl shadow-sm hover:border-maroon-500 hover:text-maroon-700 transition flex items-center gap-2 font-bold text-sm">
+                                <button onClick={() => setView('form')} className="bg-white border-2 border-slate-200 text-slate-600 p-2 md:p-2.5 rounded-2xl shadow-sm hover:border-maroon-500 hover:text-maroon-700 transition flex items-center gap-1.5 md:gap-2 font-bold text-xs md:text-sm">
                                     <Icons.Plus /> <span className="hidden sm:inline">Form Baru</span>
                                 </button>
                             )}
                         </div>
                         
-                        <div className="mb-6 p-3 bg-blue-50 border border-blue-100 rounded-xl flex items-center gap-2">
-                            <Icons.Info className="text-blue-500" />
-                            <span className="text-xs font-bold text-blue-700">Menampilkan data minggu ini: {weekStart.toLocaleDateString('id-ID')} - {weekEnd.toLocaleDateString('id-ID')}</span>
+                        <div className="mb-5 md:mb-6 p-2.5 md:p-3 bg-blue-50 border border-blue-100 rounded-xl flex items-center gap-2">
+                            <Icons.Info />
+                            <span className="text-[10px] md:text-xs font-bold text-blue-700">Minggu ini: {weekStart.toLocaleDateString('id-ID')} - {weekEnd.toLocaleDateString('id-ID')}</span>
                         </div>
 
                         <div className="space-y-4">
                             {filteredHandovers.length === 0 ? (
-                                <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 border-dashed"><p className="text-slate-500 font-bold">Belum ada catatan untuk minggu ini.</p></div> 
+                                <div className="text-center py-12 md:py-16 bg-white rounded-3xl border border-slate-200 border-dashed"><p className="text-slate-500 font-bold text-sm">Belum ada catatan.</p></div> 
                             ) : (
                                 filteredHandovers.map(h => {
                                     const allChecks = Object.entries(h.checks || {}).map(([k, v]) => {
@@ -852,34 +760,34 @@
                                     
                                     return (
                                         <div key={h.id} className="bg-white rounded-3xl shadow-sm border border-slate-200/50 relative overflow-hidden transition-all duration-300">
-                                            <div className="absolute top-0 left-0 w-2 h-full bg-maroon-600 z-10"></div>
+                                            <div className="absolute top-0 left-0 w-1.5 md:w-2 h-full bg-maroon-600 z-10"></div>
                                             
-                                            <div onClick={() => toggleExpand(h.id)} className="p-5 cursor-pointer hover:bg-slate-50/50 transition flex justify-between items-start">
+                                            <div onClick={() => toggleExpand(h.id)} className="p-4 md:p-5 cursor-pointer hover:bg-slate-50/50 transition flex justify-between items-start">
                                                 <div>
-                                                    <div className="flex flex-wrap gap-2 mb-2">
-                                                        <span className="bg-rose-50 text-maroon-700 text-xs font-black px-2.5 py-1 rounded-md">{h.stage}</span>
-                                                        <span className="bg-amber-50 text-amber-700 text-xs font-black px-2.5 py-1 rounded-md">{h.line || "ALL LINE"}</span>
-                                                        <span className="bg-slate-100 text-slate-600 text-xs font-bold px-2.5 py-1 rounded-md">{h.shift}</span>
+                                                    <div className="flex flex-wrap gap-1.5 md:gap-2 mb-2">
+                                                        <span className="bg-rose-50 text-maroon-700 text-[10px] md:text-xs font-black px-2 md:px-2.5 py-1 rounded-md">{h.stage}</span>
+                                                        <span className="bg-amber-50 text-amber-700 text-[10px] md:text-xs font-black px-2 md:px-2.5 py-1 rounded-md">{h.line || "ALL LINE"}</span>
+                                                        <span className="bg-slate-100 text-slate-600 text-[10px] md:text-xs font-bold px-2 md:px-2.5 py-1 rounded-md">{h.shift}</span>
                                                     </div>
-                                                    <p className="font-extrabold text-slate-800">{new Date(h.date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                                                    <p className="font-extrabold text-slate-800 text-sm md:text-base">{new Date(h.date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
                                                     
                                                     {!isExpanded && (
                                                         <div className="mt-2 flex items-center gap-2">
-                                                            <span className="text-[10px] font-bold text-slate-500">{allChecks.length} Aktivitas diperiksa.</span>
+                                                            <span className="text-[9px] md:text-[10px] font-bold text-slate-500">{allChecks.length} Aktivitas.</span>
                                                             {exceptions.length > 0 ? (
-                                                                <span className="text-[10px] font-black text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full">{exceptions.length} Catatan</span>
+                                                                <span className="text-[9px] md:text-[10px] font-black text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full">{exceptions.length} Catatan</span>
                                                             ) : (
-                                                                <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Semua OK</span>
+                                                                <span className="text-[9px] md:text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Semua OK</span>
                                                             )}
                                                         </div>
                                                     )}
 
-                                                    <div className="mt-4 flex">
+                                                    <div className="mt-3 md:mt-4 flex">
                                                         <button 
                                                             onClick={(e) => { e.stopPropagation(); handleShareWA(h); }} 
-                                                            className="flex items-center gap-1.5 bg-[#25D366] text-white px-3 py-2 rounded-xl text-[11px] sm:text-xs font-extrabold shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all active:scale-95"
+                                                            className="flex items-center gap-1.5 bg-[#25D366] text-white px-2.5 py-1.5 md:px-3 md:py-2 rounded-xl text-[10px] md:text-[11px] font-extrabold shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all active:scale-95"
                                                         >
-                                                            <Icons.WhatsApp /> Share Laporan {h.shift}
+                                                            <Icons.WhatsApp /> Share Laporan
                                                         </button>
                                                     </div>
                                                 </div>
@@ -888,24 +796,24 @@
                                                 </div>
                                             </div>
 
-                                            <div className={`accordion-content bg-slate-50 border-t border-slate-100 ${isExpanded ? 'max-h-[3000px] opacity-100 p-5' : 'max-h-0 opacity-0 p-0'}`}>
-                                                <div className="mb-4">
-                                                    <h4 className="text-xs font-black text-slate-500 uppercase tracking-wider mb-3">Rincian Pengecekan ({allChecks.length})</h4>
+                                            <div className={`accordion-content bg-slate-50 border-t border-slate-100 ${isExpanded ? 'max-h-[3000px] opacity-100 p-4 md:p-5' : 'max-h-0 opacity-0 p-0'}`}>
+                                                <div className="mb-3 md:mb-4">
+                                                    <h4 className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-wider mb-2 md:mb-3">Rincian Pengecekan ({allChecks.length})</h4>
                                                 </div>
-                                                <div className="space-y-3">
+                                                <div className="space-y-2.5 md:space-y-3">
                                                     {allChecks.map((check, idx) => (
-                                                        <div key={idx} className={`rounded-xl p-3 border ${check.status === 'OK' ? 'bg-white border-slate-100' : 'bg-rose-50/50 border-rose-100'}`}>
+                                                        <div key={idx} className={`rounded-xl p-2.5 md:p-3 border ${check.status === 'OK' ? 'bg-white border-slate-100' : 'bg-rose-50/50 border-rose-100'}`}>
                                                             <div className="flex justify-between items-start">
                                                                 <div>
-                                                                    <p className="text-[10px] text-slate-400 font-bold mb-0.5">{check.area}</p>
-                                                                    <p className="text-sm font-bold text-slate-800 leading-tight pr-2">{check.item}</p>
+                                                                    <p className="text-[9px] md:text-[10px] text-slate-400 font-bold mb-0.5">{check.area}</p>
+                                                                    <p className="text-xs md:text-sm font-bold text-slate-800 leading-tight pr-2">{check.item}</p>
                                                                 </div>
-                                                                <span className={`shrink-0 text-[10px] font-black px-2 py-1 rounded-md ${check.status === 'OK' ? 'bg-emerald-100 text-emerald-700' : check.status === 'NOT OK' ? 'bg-rose-500 text-white shadow-md' : 'bg-amber-400 text-white shadow-md'}`}>
+                                                                <span className={`shrink-0 text-[9px] md:text-[10px] font-black px-1.5 md:px-2 py-0.5 md:py-1 rounded-md ${check.status === 'OK' ? 'bg-emerald-100 text-emerald-700' : check.status === 'NOT OK' ? 'bg-rose-500 text-white shadow-md' : 'bg-amber-400 text-white shadow-md'}`}>
                                                                     {check.status}
                                                                 </span>
                                                             </div>
                                                             {check.notes && (
-                                                                <p className="text-xs font-medium text-slate-600 bg-white p-2 rounded-lg border border-slate-200 mt-2 italic shadow-sm">
+                                                                <p className="text-[10px] md:text-xs font-medium text-slate-600 bg-white p-1.5 md:p-2 rounded-lg border border-slate-200 mt-2 italic shadow-sm">
                                                                     "{check.notes}"
                                                                 </p>
                                                             )}
@@ -928,42 +836,41 @@
 
             return (
                 <div className="fade-in pb-32">
-                    <div className="flex justify-between items-center mb-6">
-                        <div><h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Serah Terima</h2></div>
-                        <button onClick={() => setView('history')} className="bg-white border-2 border-slate-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-50 transition">Lihat Histori</button>
+                    <div className="flex justify-between items-center mb-5 md:mb-6">
+                        <div><h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Serah Terima</h2></div>
+                        <button onClick={() => setView('history')} className="bg-white border-2 border-slate-200 px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-sm font-bold hover:bg-slate-50 transition">Lihat Histori</button>
                     </div>
                     
-                    {/* PERUBAHAN: Menghapus 'sticky top-[72px] z-30' agar panel filter bisa ikut ter-scroll ke atas dan tidak menutupi aktivitas */}
-                    <div className="bg-white p-5 rounded-3xl shadow-sm border border-slate-200/50 mb-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                    <div className="bg-white p-4 md:p-5 rounded-3xl shadow-sm border border-slate-200/50 mb-5 md:mb-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3 mb-3 md:mb-4">
                             <div>
-                                <label className="block text-[10px] font-bold text-slate-500 mb-1.5">Tanggal</label>
-                                <input type="date" value={dateStr} onChange={e => setDateStr(e.target.value)} className="w-full p-2.5 rounded-xl border bg-slate-50 font-bold text-xs" />
+                                <label className="block text-[9px] md:text-[10px] font-bold text-slate-500 mb-1 md:mb-1.5">Tanggal</label>
+                                <input type="date" value={dateStr} onChange={e => setDateStr(e.target.value)} className="w-full p-2 md:p-2.5 rounded-xl border bg-slate-50 font-bold text-[11px] md:text-xs" />
                             </div>
                             <div>
-                                <label className="block text-[10px] font-bold text-slate-500 mb-1.5">Shift</label>
-                                <select value={shift} onChange={e => setShift(e.target.value)} className="w-full p-2.5 rounded-xl border bg-slate-50 font-bold text-xs">
+                                <label className="block text-[9px] md:text-[10px] font-bold text-slate-500 mb-1 md:mb-1.5">Shift</label>
+                                <select value={shift} onChange={e => setShift(e.target.value)} className="w-full p-2 md:p-2.5 rounded-xl border bg-slate-50 font-bold text-[11px] md:text-xs">
                                     <option>Shift 1</option><option>Shift 2</option><option>Shift 3</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-[10px] font-bold text-slate-500 mb-1.5">Pilih Stage</label>
-                                <select value={stage} onChange={e => setStage(e.target.value)} className="w-full p-2.5 rounded-xl border bg-rose-50 text-maroon-700 font-black text-xs">
+                                <label className="block text-[9px] md:text-[10px] font-bold text-slate-500 mb-1 md:mb-1.5">Pilih Stage</label>
+                                <select value={stage} onChange={e => setStage(e.target.value)} className="w-full p-2 md:p-2.5 rounded-xl border bg-rose-50 text-maroon-700 font-black text-[11px] md:text-xs">
                                     <option>Stage 1</option><option>Stage 2</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div className="border-t border-slate-100 pt-3">
-                            <label className="block text-[10px] font-bold text-slate-500 mb-2">Pilih Line Berjalan (Maksimal 5 Line)</label>
-                            <div className="flex flex-wrap gap-2">
+                        <div className="border-t border-slate-100 pt-2 md:pt-3">
+                            <label className="block text-[9px] md:text-[10px] font-bold text-slate-500 mb-1.5 md:mb-2">Pilih Line (Maksimal 5 Line)</label>
+                            <div className="flex flex-wrap gap-1.5 md:gap-2">
                                 {LINE_OPTIONS[stage].map(opt => {
                                     const isActive = selectedLines.includes(opt);
                                     return (
                                         <button 
                                             key={opt} 
                                             onClick={() => handleLineClick(opt)} 
-                                            className={`px-4 py-2.5 rounded-xl text-xs font-extrabold transition-all duration-300 ${isActive ? 'bg-amber-500 text-white shadow-md shadow-amber-500/30 scale-105' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+                                            className={`px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-[10px] md:text-xs font-extrabold transition-all duration-300 ${isActive ? 'bg-amber-500 text-white shadow-md shadow-amber-500/30 scale-105' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}
                                         >
                                             {opt}
                                         </button>
@@ -972,39 +879,43 @@
                             </div>
                         </div>
 
-                        <div className="mt-5 flex items-center gap-3">
-                            <div className="flex-1 bg-slate-100 rounded-full h-2">
-                                <div className="bg-maroon-500 h-2 rounded-full transition-all duration-300" style={{ width: `${progress}%` }}></div>
+                        <div className="mt-4 md:mt-5 flex items-center gap-2 md:gap-3">
+                            <div className="flex-1 bg-slate-100 rounded-full h-1.5 md:h-2">
+                                <div className="bg-maroon-500 h-1.5 md:h-2 rounded-full transition-all duration-300" style={{ width: `${progress}%` }}></div>
                             </div>
-                            <span className="text-[10px] font-black text-slate-500 whitespace-nowrap">{completedItems} / {totalItems}</span>
+                            <span className="text-[9px] md:text-[10px] font-black text-slate-500 whitespace-nowrap">{completedItems} / {totalItems}</span>
                         </div>
                     </div>
 
-                    <div className="space-y-6">
-                        {Object.keys(groupedActivities).length === 0 ? (
-                             <div className="text-center py-12 bg-white rounded-3xl border border-slate-200 border-dashed">
-                                 <p className="text-slate-500 font-bold">Tidak ada aktivitas untuk line ini di {stage}.</p>
+                    <div className="space-y-4 md:space-y-6">
+                        {!masterActivities || masterActivities.length === 0 ? (
+                            <div className="text-center py-10 bg-white rounded-3xl border border-slate-200 border-dashed">
+                                <p className="text-slate-500 font-bold text-sm">Data Aktivitas belum termuat. Silakan Sinkronkan.</p>
+                            </div>
+                        ) : Object.keys(groupedActivities).length === 0 ? (
+                             <div className="text-center py-10 bg-white rounded-3xl border border-slate-200 border-dashed">
+                                 <p className="text-slate-500 font-bold text-sm">Tidak ada aktivitas untuk line ini di {stage}.</p>
                              </div>
                         ) : (
                             Object.entries(groupedActivities).map(([areaName, activities]) => (
                                 <div key={areaName} className="bg-white rounded-3xl border border-slate-200/60 overflow-hidden shadow-sm">
-                                    <div className="bg-slate-50/80 px-5 py-4 border-b flex justify-between items-center">
-                                        <h3 className="font-extrabold text-lg text-slate-800">{areaName}</h3>
-                                        <button onClick={() => setAreaAllOk(areaName)} className="text-xs font-black border border-emerald-200 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl hover:bg-emerald-100 transition">Set OK Semua</button>
+                                    <div className="bg-slate-50/80 px-4 md:px-5 py-3 md:py-4 border-b flex justify-between items-center">
+                                        <h3 className="font-extrabold text-base md:text-lg text-slate-800">{areaName}</h3>
+                                        <button onClick={() => setAreaAllOk(areaName)} className="text-[10px] md:text-xs font-black border border-emerald-200 bg-emerald-50 text-emerald-600 px-3 py-1.5 md:px-4 md:py-2 rounded-xl hover:bg-emerald-100 transition">Set OK Semua</button>
                                     </div>
                                     <div className="divide-y divide-slate-100">
                                         {activities.map((item, index) => {
                                             const key = `${areaName}---${item}`; 
                                             const itemState = checks[key] || { status: null, notes: '' };
                                             return (
-                                                <div key={index} className="p-5">
-                                                    <p className="font-bold text-slate-700 mb-3">{item}</p>
-                                                    <div className="flex gap-2 mb-3">
+                                                <div key={index} className="p-4 md:p-5">
+                                                    <p className="font-bold text-slate-700 text-sm md:text-base mb-2 md:mb-3">{item}</p>
+                                                    <div className="flex gap-1.5 md:gap-2 mb-2 md:mb-3">
                                                         {['OK', 'NOT OK', 'ADA PERGANTIAN'].map(opt => (
-                                                            <button key={opt} onClick={() => handleStatusChange(areaName, item, opt)} className={`flex-1 py-2 text-xs font-black rounded-xl transition-all shadow-sm ${itemState.status === opt ? (opt === 'OK' ? 'bg-emerald-500 text-white' : opt === 'NOT OK' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-white') : 'bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-200/60'}`}>{opt === 'ADA PERGANTIAN' ? 'PERGANTIAN' : opt}</button>
+                                                            <button key={opt} onClick={() => handleStatusChange(areaName, item, opt)} className={`flex-1 py-1.5 md:py-2 text-[10px] md:text-xs font-black rounded-xl transition-all shadow-sm ${itemState.status === opt ? (opt === 'OK' ? 'bg-emerald-500 text-white' : opt === 'NOT OK' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-white') : 'bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-200/60'}`}>{opt === 'ADA PERGANTIAN' ? 'PERGANTIAN' : opt}</button>
                                                         ))}
                                                     </div>
-                                                    <input type="text" placeholder="Catatan tambahan (jika ada)..." value={itemState.notes} onChange={(e) => handleNotesChange(areaName, item, e.target.value)} className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium focus:ring-2 focus:ring-maroon-500/30 outline-none transition" />
+                                                    <input type="text" placeholder="Catatan tambahan (jika ada)..." value={itemState.notes} onChange={(e) => handleNotesChange(areaName, item, e.target.value)} className="w-full p-2.5 md:p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs md:text-sm font-medium focus:ring-2 focus:ring-maroon-500/30 outline-none transition" />
                                                 </div>
                                             )
                                         })}
@@ -1016,7 +927,7 @@
                     
                     {totalItems > 0 && (
                         <div className="fixed bottom-[88px] left-0 w-full px-4 md:px-8 max-w-4xl mx-auto left-1/2 -translate-x-1/2 z-30 pointer-events-none">
-                            <button onClick={handleSubmitForm} className="w-full py-4 bg-maroon-shine text-white rounded-2xl font-black shadow-lg pointer-events-auto flex justify-center items-center gap-2 hover:shadow-xl transition-all active:scale-95"><Icons.Handshake /> Simpan Laporan</button>
+                            <button onClick={handleSubmitForm} className="w-full py-3.5 md:py-4 bg-maroon-shine text-white rounded-2xl font-black shadow-lg pointer-events-auto flex justify-center items-center gap-2 hover:shadow-xl transition-all active:scale-95 text-sm md:text-base"><Icons.Handshake /> Simpan Laporan</button>
                         </div>
                     )}
                 </div>
@@ -1030,7 +941,11 @@
             const [message, setMessage] = useState(null);
             const [isSyncing, setIsSyncing] = useState(false);
 
-            const [inventory, setInventory] = useLocalStorage('ccp_inventory_v5', MASTER_DATA.map(m => ({ id: m.id, stock: 0 })));
+            // Ganti MASTER_DATA default hardcode menjadi state kosong awalnya. Akan difetch dari backend.
+            const [masterData, setMasterData] = useLocalStorage('ccp_master_barang', []);
+            const [masterActivities, setMasterActivities] = useLocalStorage('ccp_master_aktivitas', []);
+
+            const [inventory, setInventory] = useLocalStorage('ccp_inventory_v5', []);
             const [transactions, setTransactions] = useLocalStorage('ccp_transactions_v5', []);
             const [orders, setOrders] = useLocalStorage('ccp_orders_v5', []);
             const [handovers, setHandovers] = useLocalStorage('ccp_handovers_v5', []); 
@@ -1050,7 +965,6 @@
                 } catch (err) { console.error("Auto-sync bg error:", err); }
             }, [inventory, transactions, orders, handovers, user]);
 
-            // PERUBAHAN: Menambahkan parameter `silent` agar saat auto-sync tidak memunculkan popup yang mengganggu
             const handleDirectSync = async (silent = false) => {
                 if (!SCRIPT_URL || SCRIPT_URL.includes("ISI_URL") || SCRIPT_URL.trim() === "") {
                     if (!silent) showMessage('Mode Offline', 'URL Apps Script belum terkonfigurasi.', 'info');
@@ -1065,7 +979,12 @@
                         if (result.data.transactions) setTransactions(result.data.transactions);
                         if (result.data.orders) setOrders(result.data.orders);
                         if (result.data.handovers) setHandovers(result.data.handovers);
-                        if (!silent) showMessage('Berhasil', 'Data disinkronkan dengan Google Spreadsheet.', 'success');
+                        
+                        // NEW: Ambil Master Data
+                        if (result.data.masterBarang) setMasterData(result.data.masterBarang);
+                        if (result.data.aktivitasStage) setMasterActivities(result.data.aktivitasStage);
+
+                        if (!silent) showMessage('Berhasil', 'Data dan Master Data telah disinkronkan dengan Google Spreadsheet.', 'success');
                     } else throw new Error(result.message || "Data kosong/format tidak sesuai.");
                 } catch (err) { 
                     if (!silent) showMessage('Gagal', err.message || 'Periksa koneksi internet Anda.', 'error'); 
@@ -1074,11 +993,8 @@
                 finally { setIsSyncing(false); }
             };
 
-            // PERUBAHAN: Memicu sinkronisasi di latar belakang sesaat setelah login
             const handleLogin = (role, username) => {
                 setUser({ role, username });
-                
-                // Beri jeda sebentar agar transisi halaman terjadi dulu, lalu auto-sync diam-diam (silent = true)
                 setTimeout(() => {
                     handleDirectSync(true);
                 }, 500);
@@ -1090,11 +1006,11 @@
 
             const renderContent = () => {
                 switch(activeTab) {
-                    case 'dashboard': return <Dashboard inventory={inventory} transactions={transactions} />;
-                    case 'inventory': return <Inventory inventory={inventory} setInventory={setInventory} addTransaction={addTransaction} showMessage={showMessage} userRole={user.role} triggerAutoSync={triggerAutoSync} />;
-                    case 'orders': return <Orders orders={orders} setOrders={setOrders} showMessage={showMessage} userRole={user.role} triggerAutoSync={triggerAutoSync} />;
-                    case 'handover': return <Handover handovers={handovers} setHandovers={setHandovers} showMessage={showMessage} userRole={user.role} triggerAutoSync={triggerAutoSync} />;
-                    default: return <Dashboard inventory={inventory} transactions={transactions} />;
+                    case 'dashboard': return <Dashboard inventory={inventory} transactions={transactions} masterData={masterData} />;
+                    case 'inventory': return <Inventory inventory={inventory} setInventory={setInventory} addTransaction={addTransaction} showMessage={showMessage} userRole={user.role} triggerAutoSync={triggerAutoSync} masterData={masterData} />;
+                    case 'orders': return <Orders orders={orders} setOrders={setOrders} showMessage={showMessage} userRole={user.role} triggerAutoSync={triggerAutoSync} masterData={masterData} />;
+                    case 'handover': return <Handover handovers={handovers} setHandovers={setHandovers} showMessage={showMessage} userRole={user.role} triggerAutoSync={triggerAutoSync} masterActivities={masterActivities} />;
+                    default: return <Dashboard inventory={inventory} transactions={transactions} masterData={masterData} />;
                 }
             };
 
@@ -1102,32 +1018,32 @@
                 <div className="min-h-screen flex flex-col text-slate-800 font-sans selection:bg-maroon-200">
                     <MessageBox message={message} onClose={() => setMessage(null)} />
 
-                    <header className="glass-panel p-4 sticky top-0 z-[40] shadow-sm flex items-center justify-between">
-                        <div className="flex items-center gap-3">
+                    <header className="glass-panel p-3 md:p-4 sticky top-0 z-[40] shadow-sm flex items-center justify-between">
+                        <div className="flex items-center gap-2 md:gap-3">
                             <Icons.Logo />
                             <div className="text-left">
-                                <h1 className="text-xl font-extrabold text-slate-800 tracking-tight leading-none">CCP System</h1>
-                                <p className="text-[10px] text-maroon-600 font-black uppercase tracking-widest mt-0.5">{user.role}</p>
+                                <h1 className="text-lg md:text-xl font-extrabold text-slate-800 tracking-tight leading-none">CCP System</h1>
+                                <p className="text-[9px] md:text-[10px] text-maroon-600 font-black uppercase tracking-widest mt-0.5">{user.role}</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5 md:gap-2">
                             <button 
                                 onClick={() => handleDirectSync(false)} disabled={isSyncing}
-                                className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 rounded-full text-slate-700 hover:bg-slate-200 shadow-sm transition font-bold text-xs disabled:opacity-50 cursor-pointer"
+                                className="flex items-center gap-1.5 px-2.5 py-1.5 md:px-3 md:py-2 bg-slate-100 rounded-full text-slate-700 hover:bg-slate-200 shadow-sm transition font-bold text-[10px] md:text-xs disabled:opacity-50 cursor-pointer"
                             >
                                 <span className={isSyncing ? "animate-spin-custom" : ""}><Icons.Refresh /></span>
                                 <span className="hidden sm:inline">{isSyncing ? 'Menyinkronkan...' : 'Sinkronkan'}</span>
                             </button>
-                            <button onClick={handleLogout} className="p-2 bg-rose-50 rounded-full text-rose-600 hover:bg-rose-100 shadow-sm transition ml-1"><Icons.Logout /></button>
+                            <button onClick={handleLogout} className="p-1.5 md:p-2 bg-rose-50 rounded-full text-rose-600 hover:bg-rose-100 shadow-sm transition ml-0.5 md:ml-1"><Icons.Logout /></button>
                         </div>
                     </header>
 
-                    <main className="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full pb-32">
+                    <main className="flex-1 p-3 md:p-8 max-w-4xl mx-auto w-full pb-32">
                         {renderContent()}
                     </main>
 
-                    <div className="fixed bottom-6 left-0 w-full flex justify-center px-4 z-[50] pointer-events-none">
-                        <nav className="pointer-events-auto bg-white/90 backdrop-blur-xl border border-white flex justify-around p-2 shadow-2xl rounded-3xl w-full max-w-md ring-1 ring-slate-900/5">
+                    <div className="fixed bottom-4 md:bottom-6 left-0 w-full flex justify-center px-3 md:px-4 z-[50] pointer-events-none">
+                        <nav className="pointer-events-auto bg-white/95 backdrop-blur-xl border border-slate-100 flex justify-around p-1.5 md:p-2 shadow-2xl rounded-3xl w-full max-w-md ring-1 ring-slate-900/5">
                             {[
                                 { id: 'dashboard', icon: <Icons.Home />, label: 'Beranda' },
                                 { id: 'inventory', icon: <Icons.Box />, label: 'Stok' },
@@ -1136,10 +1052,10 @@
                             ].map(item => (
                                 <button 
                                     key={item.id} onClick={() => setActiveTab(item.id)} 
-                                    className={`flex flex-col items-center p-2.5 w-16 transition-all ${activeTab === item.id ? 'text-maroon-700' : 'text-slate-400'}`}
+                                    className={`flex flex-col items-center p-2 md:p-2.5 w-14 md:w-16 transition-all ${activeTab === item.id ? 'text-maroon-700 scale-105' : 'text-slate-400 hover:text-slate-600'}`}
                                 >
                                     {item.icon}
-                                    <span className="text-[10px] mt-1 font-bold">{item.label}</span>
+                                    <span className="text-[9px] md:text-[10px] mt-0.5 md:mt-1 font-bold">{item.label}</span>
                                 </button>
                             ))}
                         </nav>
@@ -1158,7 +1074,7 @@
                 navigator.serviceWorker.register('./sw.js').then(reg => {
                     console.log('Service Worker terdaftar di Scope:', reg.scope);
                 }).catch(err => {
-                    console.warn('Gagal mendaftar Service Worker (Pastikan file sw.js sudah dibuat):', err);
+                    console.warn('Gagal mendaftar Service Worker:', err);
                 });
             });
         }
